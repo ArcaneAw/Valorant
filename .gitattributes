@@ -1,0 +1,88 @@
+*.cpp linguist-detectable=true
+
+#NoEnv
+#Persistent
+#MaxThreadsPerHotkey 2
+#KeyHistory 0
+ListLines Off
+SetBatchLines, -1
+SetKeyDelay, -1, -1
+SetMouseDelay, -1
+SetDefaultMouseSpeed, 0
+SetWinDelay, -1
+SetControlDelay, -1
+SendMode Input
+CoordMode, Pixel, Screen
+SoundBeep, 300, 200
+SoundBeep, 400, 200
+
+;HOTKEYS
+key_hold_mode 	:= "Home"			; scan will only scan if "key_hold" is pressed
+key_exit 		:= "End"			; self explanatory		
+key_hold 		:= "XButton2"		; key that you hold to scan (example "T")  ปรับปุ่มกดใช้ trigget bot มีปุ่ม alt , XButton2 ( ข้างเมาส์ )
+ 
+;SETTINGS
+pixel_box 	:= 3		; Keep between min 3 and max 8	
+pixel_sens 	:= 60		; higher/lower = more/less color sensitive 	
+pixel_color 	:= 0xFFFF55 ; yellow="0xFEFE40", purple="0xA145A3"
+tap_time	:=	100		; Delay in ms between shots when triggered
+
+leftbound := A_ScreenWidth / 2 - pixel_box
+rightbound := A_ScreenWidth / 2 + pixel_box
+topbound := A_ScreenHeight / 2 - pixel_box
+bottombound := A_ScreenHeight / 2 + pixel_box
+ 
+hotkey, %key_hold_mode%, holdmode
+hotkey, %key_exit%, terminate
+return
+ 
+start:
+ 
+terminate:
+Sleep 400
+exitapp
+return
+ 
+holdmode:
+settimer, loop2, 1
+return
+ 
+loop2:
+While GetKeyState(key_hold, "P"){
+    PixelSearch()
+}
+return
+ 
+ 
+PixelSearch() {
+global
+PixelSearch, FoundX, FoundY, leftbound, topbound, rightbound, bottombound, pixel_color, pixel_sens, Fast RGB
+If !(ErrorLevel)
+{
+If !GetKeyState("LButton")
+{
+click
+sleep %tap_time%
+}
+}
+return
+}
+
+;#if
+;PixelSearch() {
+;global
+;PixelSearch, FoundX, FoundY, leftbound, topbound, rightbound, bottombound, pixel_color, pixel_sens, Fast RGB
+;If !(ErrorLevel)
+;{
+;If !GetKeyState("LButton")
+;{
+;ClickPixel()
+;sleep 100
+;}
+;}
+;return
+;}
+ 
+;ClickPixel() {
+;    SendInput, {Click}
+;}
